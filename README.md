@@ -22,7 +22,8 @@ The user can modify any cell in the grid with one of the three available icons.
 
 Every time an icon is changed, the game checks if the corresponding row or column is valid.
 A row or column is valid if it contains exactly 3 icons of one type and 3 of another (with no empty icons).
-If a row or column is invalid, it is highlighted with a red bar above it, indicating an error.
+Also there cannot be more than two adjacent icons with the same aspect in a row/column.
+If a row or column is invalid, the icon color change to red, indicating an error.
 
 4. **Win Condition**
 
