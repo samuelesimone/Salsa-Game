@@ -53,7 +53,7 @@ struct ContentView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 40, height: 40)
-                                    .symbolRenderingMode(.multicolor)
+                                    .symbolRenderingMode(.palette)
                                     .foregroundStyle(matchedIndices.contains(index) ? Color.red : Color.primary)
                             }
                         }
