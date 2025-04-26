@@ -9,21 +9,35 @@ struct ContentView: View {
     
     @State private var timer: Timer?
     @State private var timeElapsed: Int = 0
+    @State private var isTimerPaused = false
     @State private var gameWon: Bool = false
+   
     
     var body: some View {
         VStack {
             // Cronometro
             HStack {
-                Text(!gameWon ? "Tempo: \(timeElapsed)s" : "Hai vinto in \(timeElapsed)s!")
+                if !gameWon {
+                    Text("Tempo: \(timeElapsed)s")
+                        .font(.title)
+                        .padding()
+                }else {
+                    Text("Hai vinto in \(timeElapsed)s!")
+                        .font(.title)
+                        .padding()
+                }
+                if isTimerPaused {
+                    Text("Pausa")
                     .font(.title)
                     .padding()
+                }
+                
             }
             
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: gridSize)) {
                 ForEach(0..<36, id: \.self) { index in
                     Button(action: {
-                        if !gameWon {
+                        if !gameWon && !isTimerPaused{
                             // Update the icon cell
                             iconIndices[index] = (iconIndices[index] + 1) % iconOptions.count
                             
@@ -61,12 +75,29 @@ struct ContentView: View {
                 }
             }
             .padding()
+            Button("Restart", systemImage: "restart", action: RestartGame)
+            Button("Pause", systemImage: "pause", action: PauseGame)
+            
+                
         }
         .onAppear {
             startTimer()
         }
     }
-
+    func PauseGame() {
+        isTimerPaused = !isTimerPaused
+    }
+    func RestartGame() {
+        timeElapsed = 0
+        gameWon = false
+        ResetGrid()
+            
+        
+    }
+    func ResetGrid() {
+        iconIndices = Array(repeating: 0, count: 36)
+    }
+    
     // MARK: - Funzione di controllo della validità
     func isValidRowOrColumn(index: Int) -> Bool {
         // Calcola la riga e la colonna
@@ -162,7 +193,7 @@ struct ContentView: View {
     // MARK: - Cronometro
     func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            if !gameWon {
+            if !gameWon && !isTimerPaused {
                 timeElapsed += 1
             }
         }
