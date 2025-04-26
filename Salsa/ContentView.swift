@@ -11,11 +11,11 @@ struct ContentView: View {
     @State private var timeElapsed: Int = 0
     @State private var isTimerPaused = false
     @State private var gameWon: Bool = false
+    @State private var diagonalVisibility = true
    
     
     var body: some View {
         VStack {
-            // Cronometro
             HStack {
                 if !gameWon {
                     Text("Tempo: \(timeElapsed)s")
@@ -61,15 +61,36 @@ struct ContentView: View {
                                 .fill(Color.clear)
                                 .frame(width: 60, height: 60)
                                 .border(Color.gray, width: 1)
+                        
+                            if isRowAndColumnInvalid(for: index) {
+                                   
+                                if diagonalVisibility && iconOptions[iconIndices[index]] != "" {
+                                    DiagonalStripesOverlay()
+                                        .opacity(0.3)
+                                }
+                                    
+                                }
+                                
+                                
+                                else if matchedIndices.contains(index) {
+                                  
+                                    if diagonalVisibility && iconOptions[iconIndices[index]] != "" {
+                                        DiagonalStripesOverlay()
+                                            .opacity(0.3)
+                                    }
+                                }
 
                             if iconOptions[iconIndices[index]] != "" {
                                 Image(systemName: iconOptions[iconIndices[index]])
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 40, height: 40)
-                                    .symbolRenderingMode(.palette)
-                                    .foregroundStyle(matchedIndices.contains(index) ? Color.red : Color.primary)
+                                    .symbolRenderingMode(.monochrome)
+                                    .foregroundColor(.primary)
+                               
                             }
+                            
+
                         }
                     }
                 }
@@ -98,70 +119,70 @@ struct ContentView: View {
         iconIndices = Array(repeating: 0, count: 36)
     }
     
-    // MARK: - Funzione di controllo della validità
-    func isValidRowOrColumn(index: Int) -> Bool {
-        // Calcola la riga e la colonna
+    // MARK: - Helpers per Righe e Colonne
+    func iconsInRow(_ row: Int) -> [Int] {
+        Array(iconIndices[(row * gridSize)..<((row + 1) * gridSize)])
+    }
+
+    func iconsInColumn(_ col: Int) -> [Int] {
+        (0..<gridSize).map { row in
+            iconIndices[row * gridSize + col]
+        }
+    }
+
+    // MARK: - Validazione di una riga o colonna
+    func isValidIcons(_ icons: [Int]) -> Bool {
+        let nonEmptyIcons = icons.filter { $0 != 0 }
+        guard nonEmptyIcons.count == gridSize else { return false } // devono essere tutte riempite
+
+        let counts = nonEmptyIcons.reduce(into: [Int: Int]()) { $0[$1, default: 0] += 1 }
+        return counts.count == 2 && counts.values.allSatisfy { $0 == 3 }
+    }
+
+    // MARK: - Validazione specifica per un indice
+    func isValidAtIndex(_ index: Int) -> Bool {
+        let row = index / gridSize
+        let col = index % gridSize
+        return isValidIcons(iconsInRow(row)) || isValidIcons(iconsInColumn(col))
+    }
+    
+    func isRowAndColumnInvalid(for index: Int) -> Bool {
         let row = index / gridSize
         let col = index % gridSize
 
-        // Verifica la riga
-        let rowIcons = Array(iconIndices[(row * gridSize)..<((row + 1) * gridSize)])
-        if isValidRowOrColumn(icons: rowIcons) {
-            return true
-        }
+        let rowIcons = iconsInRow(row)
+        let colIcons = iconsInColumn(col)
 
-        // Verifica la colonna
-        var colIcons = [Int]()
-        for r in 0..<gridSize {
-            colIcons.append(iconIndices[r * gridSize + col])
-        }
-        return isValidRowOrColumn(icons: colIcons)
+        let isRowFull = !rowIcons.contains(0)
+        let isColFull = !colIcons.contains(0)
+
+        let isRowInvalid = isRowFull && !isValidIcons(rowIcons)
+        let isColInvalid = isColFull && !isValidIcons(colIcons)
+
+        return isRowInvalid || isColInvalid
     }
 
-    // MARK: - Funzione di validità per una riga o colonna
-    func isValidRowOrColumn(icons: [Int]) -> Bool {
-        let uniqueIcons = Set(icons)
-        if uniqueIcons.count == 2 { // Devono esserci solo 2 tipi di icone
-            let counts = icons.reduce(into: [Int: Int]()) { $0[$1, default: 0] += 1 }
-            return counts.values.contains(3) && counts.values.contains(3)
-        }
-        return false
-    }
 
-    // MARK: - Check per tutte le righe e colonne
+    // MARK: - Validazione completa della griglia
     func checkAllValid() -> Bool {
-        // Verifica tutte le righe
-        for row in 0..<gridSize {
-            let rowIcons = Array(iconIndices[(row * gridSize)..<((row + 1) * gridSize)])
-            if !isValidRowOrColumn(icons: rowIcons) {
-                return false  // Se una riga non è valida, ritorna false
+        for i in 0..<gridSize {
+            if !isValidIcons(iconsInRow(i)) || !isValidIcons(iconsInColumn(i)) {
+                return false
             }
         }
-
-        // Verifica tutte le colonne
-        for col in 0..<gridSize {
-            var colIcons = [Int]()
-            for row in 0..<gridSize {
-                colIcons.append(iconIndices[row * gridSize + col])
-            }
-            if !isValidRowOrColumn(icons: colIcons) {
-                return false  // Se una colonna non è valida, ritorna false
-            }
-        }
-
-        return true  // Tutte le righe e colonne sono valide
+        return true
     }
 
-    // MARK: - Check per 3 in a row or column
+    // MARK: - Matching di 3 simboli consecutivi
     func checkMatches() {
         var newMatched: Set<Int> = []
 
-        // Check righe
+        // Controlla righe
         for row in 0..<gridSize {
             for col in 0..<(gridSize - 2) {
                 let i1 = row * gridSize + col
                 let i2 = i1 + 1
-                let i3 = i1 + 2
+                let i3 = i2 + 1
 
                 if isMatch(i1, i2, i3) {
                     newMatched.formUnion([i1, i2, i3])
@@ -169,7 +190,7 @@ struct ContentView: View {
             }
         }
 
-        // Check colonne
+        // Controlla colonne
         for col in 0..<gridSize {
             for row in 0..<(gridSize - 2) {
                 let i1 = row * gridSize + col
@@ -185,6 +206,7 @@ struct ContentView: View {
         matchedIndices = newMatched
     }
 
+    // Confronta tre celle
     func isMatch(_ i1: Int, _ i2: Int, _ i3: Int) -> Bool {
         let value = iconIndices[i1]
         return value != 0 && iconIndices[i2] == value && iconIndices[i3] == value

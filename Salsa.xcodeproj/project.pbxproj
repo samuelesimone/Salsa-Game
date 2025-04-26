@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9800CEEA2DBCE2F7006709D7 /* DiagonalStripesOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9800CEE92DBCE2F7006709D7 /* DiagonalStripesOverlay.swift */; };
 		98661BA02DBC193F00F3B354 /* SalsaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98661B9F2DBC193F00F3B354 /* SalsaApp.swift */; };
 		98661BA22DBC193F00F3B354 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98661BA12DBC193F00F3B354 /* ContentView.swift */; };
 		98661BA42DBC194000F3B354 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98661BA32DBC194000F3B354 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9800CEE92DBCE2F7006709D7 /* DiagonalStripesOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagonalStripesOverlay.swift; sourceTree = "<group>"; };
 		98661B9C2DBC193F00F3B354 /* Salsa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Salsa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98661B9F2DBC193F00F3B354 /* SalsaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalsaApp.swift; sourceTree = "<group>"; };
 		98661BA12DBC193F00F3B354 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 		98661BAF2DBC195F00F3B354 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				9800CEE92DBCE2F7006709D7 /* DiagonalStripesOverlay.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -163,6 +166,7 @@
 			files = (
 				98661BA22DBC193F00F3B354 /* ContentView.swift in Sources */,
 				98661BA02DBC193F00F3B354 /* SalsaApp.swift in Sources */,
+				9800CEEA2DBCE2F7006709D7 /* DiagonalStripesOverlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,6 +300,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Salsa/Preview Content\"";
+				DEVELOPMENT_TEAM = QLRWF66QUK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -324,6 +329,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Salsa/Preview Content\"";
+				DEVELOPMENT_TEAM = QLRWF66QUK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
